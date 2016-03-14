@@ -15,9 +15,7 @@ $.extend(gp_editor,{
 	},
 
 	sleep: function(){
-		console.log('sleep');
 		if( $('#ckeditor_wrap input[name=auto_start]:checked').length > 0 ){
-			console.log('cycle');
 			$(gp_editor.edit_div).find('.gp_twitter_carousel:not(.start_paused)').carousel('cycle');
 		}
 	},
