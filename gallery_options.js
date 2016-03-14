@@ -10,13 +10,21 @@ $.extend(gp_editor,{
 	make_sortable:		false,
 	auto_start:			true,
 
+	/**
+	 * Stop carousel cycling when editor is active
+	 *
+	 */
 	wake: function(){
 		$(gp_editor.edit_div).find('.gp_twitter_carousel').carousel('pause');
 	},
 
+	/**
+	 * Restart carousel cycling if auto_start field is checked
+	 *
+	 */
 	sleep: function(){
 		if( $('#ckeditor_wrap input[name=auto_start]:checked').length > 0 ){
-			$(gp_editor.edit_div).find('.gp_twitter_carousel:not(.start_paused)').carousel('cycle');
+			$(gp_editor.edit_div).find('.gp_twitter_carousel').carousel('cycle');
 		}
 	},
 
