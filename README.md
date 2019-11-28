@@ -1,4 +1,4 @@
-## Fork of Bootstrap-Carousel plugin for [Typesetter CMS](https://github.com/Typesetter/Typesetter) ([Josh S.](https://github.com/oyejorge))
+## Fork of [Bootstrap-Carousel plugin](https://github.com/Typesetter/Bootstrap-Carousel) for [Typesetter CMS](https://github.com/Typesetter/Typesetter)
 compatible with Bootstrap 4
 
 
