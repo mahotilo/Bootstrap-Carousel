@@ -82,16 +82,16 @@ class TwitterCarousel{
 			if( empty($caption) ){
 				$caption_class = 'no_caption';
 			}
-			$images .= '<div class="item '.$class.'">'
-						.'<img src="'.common::GetDir('/include/imgs/blank.gif').'" style="background-image:url('.$img.')" alt="">'
+			$images .= '<div class="carousel-item '.$class.'">'
+						.'<img src="'.$img.'" class="d-block w-100" alt="'.$caption.'">'
 						.'<div class="caption carousel-caption '.$caption_class.'">'.$caption.'</div>'
 						.'</div>';
 
 			//indicators
 			$thumb_path = common::ThumbnailPath($img);
 			$indicators .= '<li data-target="#'.$id.'" data-slide-to="'.$j.'" class="'.$class.'">'
-							.'<a href="'.$img.'">'
-							.'<img src="'.$thumb_path.'" alt="">'
+							.'<a href="'.$img.'" aria-hidden="true">'
+							.'<img src="'.$thumb_path.'" alt="" class="d-none" aria-hidden="true">'
 							.'</a>'
 							.'</li>';
 			$j++;
@@ -108,24 +108,26 @@ class TwitterCarousel{
 		if( isset($section_data['interval_speed']) && is_numeric($section_data['interval_speed']) ){
 			$attr = ' data-speed="'.$section_data['interval_speed'].'"';
 		}
-		echo '<div id="'.$id.'" class="'.$class.'"'.$attr.'>';
-		echo '<div style="padding-bottom:'.$section_data['height'].'">';
-
+		
+		if ($section_data['height'] == '' || $section_data['height'] == '100%') {
+			$section_data['height'] = 'auto';
+		}
+		
+		echo '<div id="'.$id.'" class="'.$class.'"'.$attr.' data-ride="carousel" style="height:'.$section_data['height'].'">';
 		// Indicators
 		echo '<ol class="carousel-indicators">';
 		echo $indicators;
 		echo '</ol>';
 
 		// Carousel items
-		echo '<div class="carousel-inner">';
+		echo '<div class="carousel-inner" style="height:100%">';
 		echo $images;
 		echo '</div>';
 
 		// Carousel nav
-		echo '<a class="carousel-control left" data-target="#'.$id.'" data-slide="prev">&lsaquo;</a>';
-		echo '<a class="carousel-control right" data-target="#'.$id.'" data-slide="next">&rsaquo;</a>';
-		echo '<span class="gp_blank_img" data-src="'.common::GetDir('/include/imgs/blank.gif').'" style="display:none"></span>';
-		echo '</div></div>';
+		echo '<a class="carousel-control-prev" href="#'.$id.'" role="button" data-slide="prev" aria-label="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span></a>';
+		echo '<a class="carousel-control-next" href="#'.$id.'" role="button" data-slide="next" aria-label="next"><span class="carousel-control-next-icon" aria-hidden="true"></span></a>';
+		echo '</div>';
 
 		return ob_get_clean();
 	}
@@ -147,22 +149,20 @@ class TwitterCarousel{
 		ob_start();
 		$id = 'carousel_'.time();
 
-		echo '<div id="'.$id.'" class="gp_twitter_carousel carousel slide">';
-		echo '<div style="padding-bottom:30%">';
+		echo '<div id="'.$id.'" class="gp_twitter_carousel carousel slide" data-ride="carousel">';
 		echo '<ol class="carousel-indicators">';
 		echo '<li class="active gp_to_remove"></li>';
 		echo '</ol>';
 
 		//<!-- Carousel items -->
-		echo '<div class="carousel-inner">';
-		echo '<div class="item active gp_to_remove"><img/></div>';
+		echo '<div class="carousel-inner" style="height:auto">';
+		echo '<div class="carousel-item active gp_to_remove"><img/></div>';
 		echo '</div>';
 
 		//<!-- Carousel nav -->
-		echo '<a class="carousel-control left" data-target="#'.$id.'" data-slide="prev">&lsaquo;</a>';
-		echo '<a class="carousel-control right" data-target="#'.$id.'" data-slide="next">&rsaquo;</a>';
-		echo '<span class="gp_blank_img" data-src="'.common::GetDir('/include/imgs/blank.gif').'" style="display:none"></span>';
-		echo '</div></div>';
+		echo '<a class="carousel-control-prev" href="#'.$id.'" role="button" data-slide="prev" aria-label="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span></a>';
+		echo '<a class="carousel-control-next" href="#'.$id.'" role="button" data-slide="next" aria-label="next"><span class="carousel-control-next-icon" aria-hidden="true"></span></a>';
+		echo '</div>';
 
 		$section['content'] = ob_get_clean();
 		$section['height'] = '30%';
@@ -220,10 +220,14 @@ class TwitterCarousel{
 
 		if( $done ) return;
 
+		if( version_compare(gpversion,'5.1','>=') ){
+			common::LoadComponents( 'bootstrap4-carousel' );
+		}else{
 		if( version_compare(gpversion,'4.3b2','>=') ){
 			common::LoadComponents( 'bootstrap3-carousel' );
 		}else{
 			common::LoadComponents( 'bootstrap-carousel' );
+		}
 		}
 
 		$page->head_js[] = '/data/_addoncode/'.$addonFolderName.'/jquery.mobile.custom.js';
@@ -245,7 +249,6 @@ class TwitterCarousel{
 			return $scripts;
 		}
 
-		//$scripts[] = '/include/js/inline_edit/inline_editing.js';
 		$scripts[] = '/include/js/inline_edit/image_common.js';
 		$scripts[] = '/include/js/inline_edit/gallery_edit_202.js';
 		$scripts[] = $addonRelativeCode.'/gallery_options.js';
