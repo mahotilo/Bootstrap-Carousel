@@ -5,7 +5,7 @@ compatible with Bootstrap 4
 2. uses "img" instead of "background-image" for slides (like in Bootstrap 4 carousel demo)
 3. does not use custom styles for controls, indicators, captions
 4. contents some trick for carousel height (empty or 100% is equivalent to auto)
-5. add "alt" (=caption) for "img"
+5. adds "alt" (=caption) for "img"
 
 
 
