@@ -8,53 +8,61 @@ class TwitterCarousel{
 
 	/**
 	 * Determine if the $type matches this content key
-	 *
 	 */
 	static function ContentKeyMatch($type){
 		global $addonFolderName;
-
-		if( $addonFolderName === $type ){ //legacy support
-			return true;
-		}
-
 		if( $type === self::content_key ){
 			return true;
 		}
 	}
 
 
-
 	/**
 	 * @static
-	 *
 	 */
+	static function GetHead() {
+		global $page, $addonRelativeCode;
+		$page->head_js[]  = $addonRelativeCode . '/jquery.mobile.custom.js';
+		$page->head_js[]  = $addonRelativeCode . '/carousel.js';
+		if ( $section_data['alt_style'] ){
+			$page->css_user[] = $addonRelativeCode . '/carousel2.css';}
+		else{
+			$page->css_user[] = $addonRelativeCode . '/carousel.css';
+		}
+	}
+
+
 	static function SectionTypes($section_types, $generated_key = false ){
-
-		$section_types[self::content_key] = array('label' => 'Bootstrap Carousel Gallery');
-
+		$section_types[self::content_key] = array();
+		$section_types[self::content_key]['label'] = 'Bootstrap Carousel Gallery';
 		return $section_types;
 	}
 
-	/**
-	 * @static
-	 *
-	 */
-	static function SectionToContent($section_data){
-		global $dataDir;
 
+	static function NewSections($links){
+		global $addonRelativeCode;
+		foreach($links as $key => $section_type_arr){
+			if( $section_type_arr[0] == self::content_key ){
+				$links[$key] = array(self::content_key, $addonRelativeCode . '/icon/section.png');
+			}
+		}
+		return $links;
+	}
+
+
+	static function SectionToContent($section_data){
 		if( !self::ContentKeyMatch($section_data['type']) ){
 			return $section_data;
 		}
-
+		global $dataDir;
 		//update content
 		if( !isset($section_data['content_version']) ){
 			$section_data['content'] = self::GenerateContent($section_data);
 		}
-
 		self::AddComponents();
-
 		return $section_data;
 	}
+
 
 	static function GenerateContent($section_data){
 		global $dataDir;
@@ -82,8 +90,8 @@ class TwitterCarousel{
 			if( empty($caption) ){
 				$caption_class = 'no_caption';
 			}
-			$images .= '<div class="carousel-item '.$class.'">'
-						.'<img src="'.$img.'" class="d-block w-100" alt="'.$caption.'">'
+			$images .= '<div class="item carousel-item '.$class.'">'
+						.'<img src="'.common::GetDir('/include/imgs/blank.gif').'" style="background-image:url('.$img.')" alt="'.$caption.'">'
 						.'<div class="caption carousel-caption '.$caption_class.'">'.$caption.'</div>'
 						.'</div>';
 
@@ -99,7 +107,6 @@ class TwitterCarousel{
 
 		ob_start();
 
-
 		$class = 'gp_twitter_carousel carousel slide';
 		if( !$section_data['auto_start'] ){
 			$class .= ' start_paused';
@@ -108,84 +115,82 @@ class TwitterCarousel{
 		if( isset($section_data['interval_speed']) && is_numeric($section_data['interval_speed']) ){
 			$attr = ' data-speed="'.$section_data['interval_speed'].'"';
 		}
+		$attr .= ' data-pause="hover"';
 		
-		if ($section_data['height'] == '' || $section_data['height'] == '100%') {
+		if ($section_data['height'] == '') {
 			$section_data['height'] = 'auto';
 		}
-		
-		echo '<div id="'.$id.'" class="'.$class.'"'.$attr.' data-ride="carousel" style="height:'.$section_data['height'].'">';
+		echo '<div id="'.$id.'" class="'.$class.'"'.$attr.'>';
+		echo '<div style="padding-bottom:'.$section_data['height'].'">';
 		// Indicators
 		echo '<ol class="carousel-indicators">';
 		echo $indicators;
 		echo '</ol>';
 
 		// Carousel items
-		echo '<div class="carousel-inner" style="height:100%">';
+		echo '<div class="carousel-inner">';
 		echo $images;
 		echo '</div>';
 
 		// Carousel nav
-		echo '<a class="carousel-control-prev" href="#'.$id.'" role="button" data-slide="prev" aria-label="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span></a>';
-		echo '<a class="carousel-control-next" href="#'.$id.'" role="button" data-slide="next" aria-label="next"><span class="carousel-control-next-icon" aria-hidden="true"></span></a>';
-		echo '</div>';
+		echo '<a class="carousel-control left carousel-control-prev" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="prev" aria-label="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span></a>';
+		echo '<a class="carousel-control right carousel-control-next" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="next" aria-label="next"><span class="carousel-control-next-icon" aria-hidden="true"></span></a>';
+		echo '<span class="gp_blank_img" data-src="'.common::GetDir('/include/imgs/blank.gif').'" style="display:none"></span>';
+		echo '</div></div>';
+
 
 		return ob_get_clean();
 	}
 
 
-
-	/**
-	 * @static
-	 */
 	static function DefaultContent($default_content,$type){
-
 		if( !self::ContentKeyMatch($type) ){
 			return $default_content;
 		}
 
 		$section = array();
 
-
 		ob_start();
 		$id = 'carousel_'.time();
 
-		echo '<div id="'.$id.'" class="gp_twitter_carousel carousel slide" data-ride="carousel">';
+		echo '<div id="'.$id.'" class="gp_twitter_carousel carousel slide">';
+		echo '<div style="padding-bottom:30%">';
 		echo '<ol class="carousel-indicators">';
 		echo '<li class="active gp_to_remove"></li>';
 		echo '</ol>';
 
 		//<!-- Carousel items -->
-		echo '<div class="carousel-inner" style="height:auto">';
-		echo '<div class="carousel-item active gp_to_remove"><img/></div>';
+		echo '<div class="carousel-inner">';
+		echo '<div class="item carousel-item active gp_to_remove"><img/></div>';
 		echo '</div>';
 
 		//<!-- Carousel nav -->
-		echo '<a class="carousel-control-prev" href="#'.$id.'" role="button" data-slide="prev" aria-label="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span></a>';
-		echo '<a class="carousel-control-next" href="#'.$id.'" role="button" data-slide="next" aria-label="next"><span class="carousel-control-next-icon" aria-hidden="true"></span></a>';
-		echo '</div>';
+		echo '<a class="carousel-control left carousel-control-prev" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="prev" aria-label="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span></a>';
+		echo '<a class="carousel-control right carousel-control-next" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="next" aria-label="next"><span class="carousel-control-next-icon" aria-hidden="true"></span></a>';
+		echo '<span class="gp_blank_img" data-src="'.common::GetDir('/include/imgs/blank.gif').'" style="display:none"></span>';
+		echo '</div></div>';
 
+		$section['gp_label'] = 'Bootstrap Carousel Gallery';
+		$section['gp_color'] = '#8d3ee8';
 		$section['content'] = ob_get_clean();
 		$section['height'] = '30%';
 		$section['auto_start'] = false;
+		$section['alt_style'] = false;
 		$section['interval_speed'] = 5000;
 		return $section;
 	}
 
 
-	/**
-	 * @static
-	 *
-	 */
 	static function SaveSection($return, $section, $type){
-		global $page;
-
 		if( !self::ContentKeyMatch($type) ){
 			return $return;
 		}
+		global $page;
 
 		$_POST += array('auto_start'=>'','images'=>array());
 
 		$page->file_sections[$section]['auto_start']		= ($_POST['auto_start'] == 'true');
+		$page->file_sections[$section]['alt_style']			= ($_POST['alt_style'] == 'true');
 		$page->file_sections[$section]['images']			= $_POST['images'];
 		$page->file_sections[$section]['captions']			= $_POST['captions'];
 		$page->file_sections[$section]['height']			= $_POST['height'];
@@ -203,13 +208,9 @@ class TwitterCarousel{
 
 	/**
 	 * Make sure the .js and .css is available to admins
-	 *
-	 * @static
-	 *
 	 */
 	static function GenerateContent_Admin(){
 		global $addonFolderName, $page, $addonRelativeCode;
-		//$page->head_script .= "\nvar SLIDESHOW_BASE = '".$addonRelativeCode."';\n";
 		self::AddComponents();
 	}
 
@@ -229,40 +230,20 @@ class TwitterCarousel{
 			common::LoadComponents( 'bootstrap-carousel' );
 		}
 		}
-
-		$page->head_js[] = '/data/_addoncode/'.$addonFolderName.'/jquery.mobile.custom.js';
-		$page->head_js[] = '/data/_addoncode/'.$addonFolderName.'/carousel.js';
-		$page->css_user[] = '/data/_addoncode/'.$addonFolderName.'/carousel.css';
-
 		$done = true;
 	}
 
 
-	/**
-	 *
-	 *
-	 */
 	static function InlineEdit_Scripts($scripts,$type){
-		global $addonRelativeCode;
-
 		if( !self::ContentKeyMatch($type) ){
 			return $scripts;
 		}
-
+		global $addonRelativeCode;
 		$scripts[] = '/include/js/inline_edit/image_common.js';
 		$scripts[] = '/include/js/inline_edit/gallery_edit_202.js';
 		$scripts[] = $addonRelativeCode.'/gallery_options.js';
 		$scripts[] = '/include/js/jquery.auto_upload.js';
 
-
 		return $scripts;
 	}
 }
-
-
-
-
-
-
-
-
