@@ -11,7 +11,7 @@ $(function(){
 			})
 			.filter('.start_paused')
 			.carousel('pause');
-		if ( $carousel.find(".item").length < 2 ){
+		if ( $carousel.find(".item, .carousel-item").length < 2 ){
       		$carousel.find(".carousel-indicators, .carousel-control").hide();
     	}
 	});

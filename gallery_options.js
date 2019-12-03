@@ -10,6 +10,7 @@ $.extend(gp_editor,{
 
 	/**
 	 * Stop carousel cycling when editor is active
+	 *
 	 */
 	wake: function(){
 		$(gp_editor.edit_div).find('.gp_twitter_carousel').carousel('pause');
@@ -35,7 +36,7 @@ $.extend(gp_editor,{
 		var carousel	= $li.closest('.gp_twitter_carousel');
 		var $inner		= carousel.find('.carousel-inner');
 		var blank		= $('.gp_blank_img').data('src') || '';
-		var $item		= $('<div class="item carousel-item"><img src="'+blank+'" style="background-image:url('+src+')"><div class="caption carousel-caption no_caption"></div></div>').appendTo($inner);
+		var $item		= $('<div class="carousel-item"><img src="'+blank+'" style="background-image:url('+src+')"><div class="caption carousel-caption no_caption"></div></div>').appendTo($inner);
 
 		$li.attr('data-target','#'+carousel.attr('id')).attr('data-slide-to',$li.siblings().length);
 
@@ -108,7 +109,7 @@ $.extend(gp_editor,{
 	sortStop: function(){
 
 		var full_wrap	= gp_editor.edit_div.find('.carousel-inner');
-		var full_images = full_wrap.find('.item','.carousel-item');
+		var full_images = full_wrap.find('.item, .carousel-item');
 
 
 		gp_editor.edit_div.find( gp_editor.sortable_area_sel ).children().each(function(i){
