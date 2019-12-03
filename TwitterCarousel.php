@@ -4,7 +4,8 @@ defined('is_running') or die('Not an entry point...');
 
 class TwitterCarousel{
 
-	const content_key = 'Carousel232';
+	const old_content_key = 'Carousel232';
+	const content_key = 'BS4Carousel';
 
 	/**
 	 * Bootstrap carousel style: 
@@ -19,7 +20,7 @@ class TwitterCarousel{
 	 */
 	static function ContentKeyMatch($type){
 		global $addonFolderName;
-		if( $type === self::content_key ){
+		if( $type === self::content_key  || $type === self::old_content_key){
 			return true;
 		}
 	}
@@ -38,7 +39,7 @@ class TwitterCarousel{
 
 	static function SectionTypes($section_types, $generated_key = false ){
 		$section_types[self::content_key] = array();
-		$section_types[self::content_key]['label'] = 'Bootstrap Carousel Gallery';
+		$section_types[self::content_key]['label'] = 'Bootstrap4 Carousel Gallery';
 		return $section_types;
 	}
 
@@ -204,7 +205,7 @@ class TwitterCarousel{
 		echo '<a class="carousel-control right carousel-control-next" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="next" aria-label="next">'.$rctrl.'</a>';
 		echo '</div></div>';
 
-		$section['gp_label'] = 'Bootstrap Carousel Gallery';
+		$section['gp_label'] = 'Bootstrap4 Carousel Gallery';
 		$section['gp_color'] = '#8d3ee8';
 		$section['content'] = ob_get_clean();
 		$section['height'] = '30%';
