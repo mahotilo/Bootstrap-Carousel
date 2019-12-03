@@ -1,19 +1,18 @@
-## Bootstrap-Carousel-4 plugin for [Typesetter CMS](https://github.com/Typesetter/Typesetter) 
-## Fork of Bootstrap-Carousel plugin  ([Josh S.](https://github.com/oyejorge))
-[Plugin Page](http://www.typesettercms.com/Plugins/232_Bootstrap_Carousel_Gallery)
+# Bootstrap-Carousel-4 plugin for [Typesetter CMS](https://github.com/Typesetter/Typesetter) 
+## Fork of Bootstrap-Carousel plugin  ([Josh S.](https://github.com/oyejorge)) [Plugin Page](http://www.typesettercms.com/Plugins/232_Bootstrap_Carousel_Gallery)
 
-* For Bootstrap 4 only
-* Use same content key as orifinal plugin, so can be used as update for exiting galleries (section must be edited to update)
-* Two styles for caption, indicators and control elemets (changes only via editing of sourse code in TwitterCarousel.php)
+* For Bootstrap 4 only (Typesetter CMS 5.1 and higher)
+* Uses the same content key as the original plugin, therefore it can be used as update for existing galleries (the section must be edited to update)
+* Two styles for caption, indicators and control elements (can only be changed by editing the source code of TwitterCarousel.php)
 
 	TwitterCarousel.php
 	/**
 	 * Bootstrap carousel style: 
 	 * 'def' - default for old plugin version
-	 * 'bs4' - default for Bootstrap4  (section must be edited to update to a new style)
+	 * 'bs4' - default for Bootstrap4  (the section must be edited to update to a new style)
 	 */
 	const style = 'bs4';
        //                    ^^^ 
 
-* Suport new style of responsive carousel height sizing.
-   If heigt="" or "auto", size of carousel is defined basing on size of first image in series (width=100%; height= auto)
+* Supports a new style of responsive carousel height sizing.
+   If height="" or "auto", the size of the carousel is determined based on the size of the first image in the series (width=100%; height= auto)
