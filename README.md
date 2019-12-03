@@ -15,4 +15,4 @@
        //                    ^^^ 
 
 * Supports a new style of responsive carousel height sizing.
-   If height="" or "auto", the size of the carousel is determined based on the size of the first image in the series (width=100%; height= auto)
+   If height="" or "auto", the size of the carousel is determined based on the responsive size of the first image in the series (width=100%; height= auto)
