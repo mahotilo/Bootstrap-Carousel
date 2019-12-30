@@ -20,5 +20,5 @@ const style = 'bs4';
    If height="" or "auto", the size of the carousel is determined based on the responsive size of the first image in the series (width=100%; height= auto)
 
 
-#Changelog
+# Changelog
 * remove jquery.mobile.custom.js and use swipe detection in carousel.js 
