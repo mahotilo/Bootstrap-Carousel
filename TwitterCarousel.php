@@ -32,7 +32,6 @@ class TwitterCarousel{
 	 */
 	static function GetHead() {
 		global $page, $addonRelativeCode;
-		$page->head_js[]  = $addonRelativeCode . '/jquery.mobile.custom.js';
 		$page->head_js[]  = $addonRelativeCode . '/carousel.js';
 	}
 
