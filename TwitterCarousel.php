@@ -4,8 +4,9 @@ defined('is_running') or die('Not an entry point...');
 
 class TwitterCarousel{
 
-	const old_content_key = 'Carousel232';
-	const content_key = 'BS4Carousel';
+	const old_content_keys = array('Carousel232','BS4Carousel');
+	const content_key = 'BSCarousel';
+
 
 	/**
 	 * Bootstrap carousel style: 
@@ -20,11 +21,81 @@ class TwitterCarousel{
 	 */
 	static function ContentKeyMatch($type){
 		global $addonFolderName;
-		if( $type === self::content_key  || $type === self::old_content_key){
+		if ( $type === self::content_key  || in_array($type, self::old_content_keys) ){
 			return true;
 		}
 	}
 
+
+	/**
+	* Just get the current layout's Bootstrap main version quickly
+	* this function can be used stand-alone and does not require the other class functions
+	* @return boolean|integer false(not Bootstrap) | true(Bootstrap but no version number) | 2 | 3 | 4 ...
+	*/
+	static function IsBootstrap(){
+		global $page, $config, $gpLayouts;
+
+		// admin pages don't have a theme/layout
+		if( $page->pagetype === 'admin_display' ){
+		  return false;
+		}
+
+		$layout_id = isset($page->TitleInfo['gpLayout']) ?
+		  $page->TitleInfo['gpLayout'] :  // page uses a custom layout
+		  $config['gpLayout'];            // page uses the default layout
+
+		// get more info from global $gpLayouts
+		$layout_arr = $gpLayouts[$layout_id];
+
+		// FrontEndFramework section in Addon.ini is not defined
+		// or the name(key) value is not 'Bootstrap'
+		if( !isset($layout_arr['framework']['name']) ||
+			strtolower($layout_arr['framework']['name']) != 'bootstrap' ){
+		  return false;
+		}
+
+		// FrontEndFramework section in Addon.ini is defined and 
+		// the name(key) value is 'Bootstrap'
+		// but there is no version(key)
+		if( empty($layout_arr['framework']['version']) ){
+		  return true;
+		}
+
+		// extract the main version from the version value
+		// e.g. 4.3.1-b2 => 4
+		$pieces   = explode('.', $layout_arr['framework']['version']);
+		$main_ver = preg_replace('/[^0-9]/', '', $pieces[0]);
+
+		return (int)$main_ver;
+	}
+	
+	
+	/**
+	* Set up carousel class names according to Bootstrap version
+	*/
+	static function InintBSSettigs(){
+		$BSVer = self::IsBootstrap();
+		if ( ($BSVer == 2) || ( $BSVer == 3 ) ){
+			$carousel_item_class = 'item';
+			$carousel_control_prev_class = 'left';
+			$carousel_control_next_class = 'right';
+			$lctrl='&lsaquo;';
+			$rctrl='&rsaquo;';
+		} else {
+			$carousel_item_class = 'carousel-item';
+			$carousel_control_prev_class = 'carousel-control-prev';
+			$carousel_control_next_class = 'carousel-control-next';
+			if (self::style == 'def') {
+				$lctrl='&lsaquo;';
+				$rctrl='&rsaquo;';
+			}else{
+				$lctrl='<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
+				$rctrl='<span class="carousel-control-next-icon" aria-hidden="true"></span>';
+			}
+		}
+		return array($carousel_item_class,$carousel_control_prev_class,$carousel_control_next_class,$lctrl,$rctrl);
+	}
+	
 
 
 	/**
@@ -70,6 +141,9 @@ class TwitterCarousel{
 
 	static function GenerateContent($section_data){
 		global $dataDir;
+	
+		list($carousel_item_class,$carousel_control_prev_class,$carousel_control_next_class,$lctrl,$rctrl) = self::InintBSSettigs();
+		
 		$section_data += array('images'=>array(),'height'=>'400');
 
 		$id = 'carousel_'.time();
@@ -94,7 +168,7 @@ class TwitterCarousel{
 			if( empty($caption) ){
 				$caption_class = 'no_caption';
 			}
-			$images .= '<div class="carousel-item '.$class.'">'
+			$images .= '<div class="'.$carousel_item_class.' '.$class.'">'
 						.'<img src="'.common::GetDir('/include/imgs/blank.gif').'" style="background-image:url('.$img.')" alt="'.$caption.'">'
 						.'<div class="caption carousel-caption '.$caption_class.'">'.$caption.'</div>'
 						.'</div>';
@@ -156,15 +230,8 @@ class TwitterCarousel{
 		echo '</div>';
 
 		// Carousel nav
-		if (self::style == 'def') {
-			$lctrl='&lsaquo;';
-			$rctrl='&rsaquo;';
-		}else{
-			$lctrl='<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
-			$rctrl='<span class="carousel-control-next-icon" aria-hidden="true"></span>';
-		}
-		echo '<a class="carousel-control left carousel-control-prev" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="prev" aria-label="prev">'.$lctrl.'</a>';
-		echo '<a class="carousel-control right carousel-control-next" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="next" aria-label="next">'.$rctrl.'</a>';
+		echo '<a class="carousel-control '.$carousel_control_prev_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="prev" aria-label="prev">'.$lctrl.'</a>';
+		echo '<a class="carousel-control '.$carousel_control_next_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="next" aria-label="next">'.$rctrl.'</a>';
 		echo '</div></div>';
 
 		return ob_get_clean();
@@ -175,6 +242,8 @@ class TwitterCarousel{
 		if( !self::ContentKeyMatch($type) ){
 			return $default_content;
 		}
+
+		list($carousel_item_class,$carousel_control_prev_class,$carousel_control_next_class,$lctrl,$rctrl) = self::InintBSSettigs();
 
 		$section = array();
 
@@ -189,22 +258,16 @@ class TwitterCarousel{
 
 		//<!-- Carousel items -->
 		echo '<div class="carousel-inner">';
-		echo '<div class="carousel-item active gp_to_remove"><img/></div>';
+		echo '<div class="'.$carousel_item_class.' active gp_to_remove"><img/></div>';
 		echo '</div>';
 
 		//<!-- Carousel nav -->
-		if (self::style == 'def') {
-			$lctrl='&lsaquo;';
-			$rctrl='&rsaquo;';
-		}else{
-			$lctrl='<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
-			$rctrl='<span class="carousel-control-next-icon" aria-hidden="true"></span>';
-		}
-		echo '<a class="carousel-control left carousel-control-prev" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="prev" aria-label="prev">'.$lctrl.'</a>';
-		echo '<a class="carousel-control right carousel-control-next" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="next" aria-label="next">'.$rctrl.'</a>';
+		echo '<a class="carousel-control '.$carousel_control_prev_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="prev" aria-label="prev">'.$lctrl.'</a>';
+		echo '<a class="carousel-control '.$carousel_control_next_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="next" aria-label="next">'.$rctrl.'</a>';
+
 		echo '</div></div>';
 
-		$section['gp_label'] = 'Bootstrap4 Carousel Gallery';
+		$section['gp_label'] = 'Bootstrap Carousel Gallery';
 		$section['gp_color'] = '#8d3ee8';
 		$section['content'] = ob_get_clean();
 		$section['height'] = '30%';
@@ -254,12 +317,22 @@ class TwitterCarousel{
 		static $done = false;
 		if ( $done ) return;
 
-		common::LoadComponents( 'bootstrap4-carousel' );
-		if (self::style == 'def') {
+		$BSVer = self::IsBootstrap();
+		if ( $BSVer == 2 ) {
+			common::LoadComponents( 'bootstrap-carousel' );
 			$page->css_user[] = $addonRelativeCode . '/carousel-def.css';
-		}else{
-			$page->css_user[] = $addonRelativeCode . '/carousel-bs4.css';
+		} elseif ( $BSVer == 3 ) {
+			common::LoadComponents( 'bootstrap3-carousel' );
+			$page->css_user[] = $addonRelativeCode . '/carousel-def.css';
+		} else {
+			common::LoadComponents( 'bootstrap4-carousel' );
+			if (self::style == 'def') {
+				$page->css_user[] = $addonRelativeCode . '/carousel-def.css';
+			}else{
+				$page->css_user[] = $addonRelativeCode . '/carousel-bs4.css';
+			}
 		}
+		
 		$done = true;
 	}
 
