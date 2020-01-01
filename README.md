@@ -22,4 +22,4 @@ const style = 'bs4';
 
 ## Changelog
 * remove jquery.mobile.custom.js and use swipe detection in carousel.js 
-* support for all versions of Bootstrap with theme BS version autodetection
+* support for all versions of Bootstrap with autodetection of theme's BS version 
