@@ -77,8 +77,8 @@ class TwitterCarousel{
 		$BSVer = self::IsBootstrap();
 		if ( ($BSVer == 2) || ( $BSVer == 3 ) ){
 			$carousel_item_class = 'item';
-			$carousel_control_prev_class = 'left';
-			$carousel_control_next_class = 'right';
+			$carousel_control_prev_class = 'left carousel-control';
+			$carousel_control_next_class = 'right carousel-control';
 			$lctrl='&lsaquo;';
 			$rctrl='&rsaquo;';
 		} else {
@@ -230,8 +230,8 @@ class TwitterCarousel{
 		echo '</div>';
 
 		// Carousel nav
-		echo '<a class="carousel-control '.$carousel_control_prev_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="prev" aria-label="prev">'.$lctrl.'</a>';
-		echo '<a class="carousel-control '.$carousel_control_next_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="next" aria-label="next">'.$rctrl.'</a>';
+		echo '<a class="'.$carousel_control_prev_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="prev" aria-label="prev">'.$lctrl.'</a>';
+		echo '<a class="'.$carousel_control_next_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="next" aria-label="next">'.$rctrl.'</a>';
 		echo '</div></div>';
 
 		return ob_get_clean();
@@ -262,8 +262,8 @@ class TwitterCarousel{
 		echo '</div>';
 
 		//<!-- Carousel nav -->
-		echo '<a class="carousel-control '.$carousel_control_prev_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="prev" aria-label="prev">'.$lctrl.'</a>';
-		echo '<a class="carousel-control '.$carousel_control_next_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="next" aria-label="next">'.$rctrl.'</a>';
+		echo '<a class="'.$carousel_control_prev_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="prev" aria-label="prev">'.$lctrl.'</a>';
+		echo '<a class="'.$carousel_control_next_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="next" aria-label="next">'.$rctrl.'</a>';
 
 		echo '</div></div>';
 
