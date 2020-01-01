@@ -13,7 +13,7 @@ class TwitterCarousel{
 	 * 'def' - default for old plugin version
 	 * 'bs4' - default for Bootstrap4  (section must be edited to update to a new style)
 	 */
-	const style = 'def';
+	const style = 'bs4';
 
 
 	/**
@@ -75,10 +75,10 @@ class TwitterCarousel{
 	*/
 	static function InintBSSettigs(){
 		$BSVer = self::IsBootstrap();
-		if ( ($BSVer == 2) || ( $BSVer == 3 ) ){
+		if ( $BSVer < 4 ){
 			$carousel_item_class = 'item';
-			$carousel_control_prev_class = 'left carousel-control';
-			$carousel_control_next_class = 'right carousel-control';
+			$carousel_control_prev_class = 'carousel-control left';
+			$carousel_control_next_class = 'carousel-control right';
 			$lctrl='&lsaquo;';
 			$rctrl='&rsaquo;';
 		} else {
@@ -321,7 +321,7 @@ class TwitterCarousel{
 		if ( $BSVer == 2 ) {
 			common::LoadComponents( 'bootstrap-carousel' );
 			$page->css_user[] = $addonRelativeCode . '/carousel-def.css';
-		} elseif ( $BSVer == 3 ) {
+		} elseif ( !$BSVer || ($BSVer == 3) ) {
 			common::LoadComponents( 'bootstrap3-carousel' );
 			$page->css_user[] = $addonRelativeCode . '/carousel-def.css';
 		} else {

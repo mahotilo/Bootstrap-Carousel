@@ -183,6 +183,7 @@
 .gp_twitter_carousel .carousel-control-prev,
 .gp_twitter_carousel .carousel-control-next{
 	cursor:pointer;
+	text-decoration: none;
 }
 
 .gp_twitter_carousel .carousel-caption{
