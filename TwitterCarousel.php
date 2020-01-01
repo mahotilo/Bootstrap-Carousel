@@ -13,7 +13,7 @@ class TwitterCarousel{
 	 * 'def' - default for old plugin version
 	 * 'bs4' - default for Bootstrap4  (section must be edited to update to a new style)
 	 */
-	const style = 'bs4';
+	const style = 'def';
 
 
 	/**
