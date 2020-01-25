@@ -3,21 +3,11 @@
 
 * For all versions of Bootstrap (Typesetter CMS 5.1 and higher)
 * Uses the same content key as the original plugin, therefore it can be used as update for existing galleries (the section must be edited to update)
-* Two styles for caption, indicators and control elements (can only be changed by editing the source code of TwitterCarousel.php)
-
-	TwitterCarousel.php
-```	
-/**
-* Bootstrap carousel style: 
-* 'def' - default for old plugin version
-* 'bs4' - default for Bootstrap4  (the section must be edited to update to a new style)
-*/
-const style = 'bs4';
-//             ^^^ 
-```
-
-* Supports a new style of responsive carousel height sizing.
+* Two styles (TS and Bootstrap) for caption, indicators and control elements
+* A new style of responsive carousel height sizing.
    If height="" or "auto", the size of the carousel is determined based on the responsive size of the first image in the series (width=100%; height= auto)
+* Horizontal or vertical scrolling
+* Options for controls and indicators display
 
 
 ## Changelog
