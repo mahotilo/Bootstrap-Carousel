@@ -4,16 +4,10 @@ defined('is_running') or die('Not an entry point...');
 
 class TwitterCarousel{
 
+	public static $config;
 	const old_content_keys = array('Carousel232','BS4Carousel');
 	const content_key = 'BSCarousel';
 
-
-	/**
-	 * Bootstrap carousel style: 
-	 * 'def' - default for old plugin version
-	 * 'bs4' - default for Bootstrap4  (section must be edited to update to a new style)
-	 */
-	const style = 'bs4';
 
 
 	/**
@@ -73,7 +67,8 @@ class TwitterCarousel{
 	/**
 	* Set up carousel class names according to Bootstrap version
 	*/
-	static function InintBSSettigs(){
+	static function InintBSSettigs(){		
+		self::LoadPluginConfig();
 		$BSVer = self::IsBootstrap();
 		if ( $BSVer < 4 ){
 			$carousel_item_class = 'item';
@@ -85,7 +80,7 @@ class TwitterCarousel{
 			$carousel_item_class = 'carousel-item';
 			$carousel_control_prev_class = 'carousel-control-prev';
 			$carousel_control_next_class = 'carousel-control-next';
-			if (self::style == 'def') {
+			if (self::$config['theme'] !== 'Bootstrap default' ) {
 				$lctrl='&lsaquo;';
 				$rctrl='&rsaquo;';
 			}else{
@@ -319,7 +314,9 @@ class TwitterCarousel{
 		static $done = false;
 		if ( $done ) return;
 
+		self::LoadPluginConfig();
 		$BSVer = self::IsBootstrap();
+		
 		if ( $BSVer == 2 ) {
 			common::LoadComponents( 'bootstrap-carousel' );
 			$page->css_user[] = $addonRelativeCode . '/carousel-def.css';
@@ -329,7 +326,7 @@ class TwitterCarousel{
 			$page->css_user[] = $addonRelativeCode . '/carousel.css';
 		} else {
 			common::LoadComponents( 'bootstrap4-carousel' );
-			if (self::style == 'def') {
+			if ( self::$config['theme'] !== 'Bootstrap default' ) {
 				$page->css_user[] = $addonRelativeCode . '/carousel-def.css';
 			}else{
 				$page->css_user[] = $addonRelativeCode . '/carousel-bs4.css';
@@ -353,4 +350,19 @@ class TwitterCarousel{
 
 		return $scripts;
 	}
+
+	
+	public static function LoadPluginConfig(){
+		global $addonPathCode, $addonPathData;
+		$config_file = $addonPathData . '/config.php';
+		if( file_exists($config_file) ){
+		  include $config_file ;
+		}else{
+			$config = array (
+			  'theme' => 'Bootstrap default',
+			);
+		}
+		self::$config = $config;
+	}
+	
 }
