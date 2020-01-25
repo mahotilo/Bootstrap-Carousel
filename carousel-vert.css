@@ -1,0 +1,74 @@
+/*------------------------------ vertical bootstrap slider----------------------------*/
+/*..................BS4................*/
+.carousel.vertical .carousel-item-next.carousel-item-left,
+.carousel.vertical .carousel-item-prev.carousel-item-right {
+    -webkit-transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0);
+}
+
+.carousel.vertical .carousel-item-next,
+.carousel.vertical .active.carousel-item-right {
+    -webkit-transform: translate3d(0, 100%, 0);
+	transform: translate3d(0, 100% 0);
+}
+
+.carousel.vertical .carousel-item-prev,
+.carousel.vertical .active.carousel-item-left {
+	-webkit-transform: translate3d(0,-100%, 0);
+	transform: translate3d(0,-100%, 0);
+}
+
+/*..................BS3................*/
+.carousel.vertical .item.next.left,
+.carousel.vertical .item.prev.right {
+    -webkit-transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0);
+top:0;
+right: 0;
+left: 0;
+}
+
+.carousel.vertical .item.next,
+.carousel.vertical .active.item.right {
+    -webkit-transform: translate3d(0, 100%, 0);
+	transform: translate3d(0, 100% 0);
+top:0;
+right: 0;
+left: 0;
+}
+
+.carousel.vertical .item.prev,
+.carousel.vertical .active.item.left {
+	-webkit-transform: translate3d(0,-100%, 0);
+	transform: translate3d(0,-100%, 0);
+top:0;
+right: 0;
+left: 0;
+}
+
+
+
+
+/*------------------------------- vertical carousel controls ------------------------------*/
+
+/*..................BS4................*/
+.carousel.vertical .carousel-control-next-icon {
+    transform-origin: 50% 50%;
+	transform: rotate(90deg);
+}
+
+.carousel.vertical .carousel-control-prev-icon {
+    transform-origin: 50% 50%;
+	transform: rotate(90deg);
+}
+
+/*..................BS3................*/
+.carousel.vertical .carousel-control.right {
+    transform-origin: 50% 50%;
+    transform: rotate(90deg);
+}
+
+.carousel.vertical .carousel-control.left {
+    transform-origin: 50% 50%;
+	transform: rotate(90deg);
+}

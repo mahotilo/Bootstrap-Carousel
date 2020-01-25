@@ -129,7 +129,7 @@ class TwitterCarousel{
 		if( !self::ContentKeyMatch($section_data['type']) ){
 			return $section_data;
 		}
-		global $dataDir;
+
 		//update content
 		if( !isset($section_data['content_version']) ){
 			$section_data['content'] = self::GenerateContent($section_data);
@@ -150,6 +150,7 @@ class TwitterCarousel{
 
 		$images = '';
 		$indicators = '';
+		$thumbs = '';
 		$j = 0;
 		foreach($section_data['images'] as $i => $img){
 			if( empty($img) ){
@@ -158,10 +159,13 @@ class TwitterCarousel{
 			$caption = trim($section_data['captions'][$i]);
 
 			$class = '';
+			$style = '';
 			if( $j == 0 ){
 				$class = 'active';
 			}
-
+			if( !isset($section_data['content_version']) ){
+				$class .= ' gp_to_remove';
+			}
 
 			//images
 			$caption_class = '';
@@ -175,19 +179,25 @@ class TwitterCarousel{
 
 			//indicators
 			$thumb_path = common::ThumbnailPath($img);
-			$indicators .= '<li data-target="#'.$id.'" data-slide-to="'.$j.'" class="'.$class.'">'
-							.'<a href="'.$img.'" aria-hidden="true">'
-							.'<img src="'.$thumb_path.'" alt="" class="d-none" aria-hidden="true">'
-							.'</a>'
-							.'</li>';
+
+			if( !$section_data['show_indicators'] ){
+				$style = 'display: none;';
+			}
+			$indicators .= '<li data-target="#'.$id.'" data-slide-to="'.$j.'" class="'.$class.'" style="'.$style.'">';
+			$indicators .= '<a href="'.$img.'" aria-hidden="true"><img src="'.$thumb_path.'" alt="" class="d-none" aria-hidden="true"></a>';
+			$indicators .= '</li>';
 			$j++;
 		}
+
 
 		ob_start();
 
 		$class = 'gp_twitter_carousel carousel slide';
 		if( !$section_data['auto_start'] ){
 			$class .= ' start_paused';
+		}
+		if( $section_data['show_vertical'] ){
+			$class .= ' vertical';
 		}
 		$attr = ' data-speed="5000"';
 		if( isset($section_data['interval_speed']) && is_numeric($section_data['interval_speed']) ){
@@ -224,14 +234,19 @@ class TwitterCarousel{
 		echo $indicators;
 		echo '</ol>';
 
+
 		// Carousel items
 		echo '<div class="carousel-inner">';
 		echo $images;
 		echo '</div>';
 
-		// Carousel nav
-		echo '<a class="'.$carousel_control_prev_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="prev" aria-label="prev">'.$lctrl.'</a>';
-		echo '<a class="'.$carousel_control_next_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="next" aria-label="next">'.$rctrl.'</a>';
+		// Carousel control
+		if( $section_data['show_controls'] ){
+			echo '<a class="'.$carousel_control_prev_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="prev" aria-label="prev">'.$lctrl.'</a>';
+			echo '<a class="'.$carousel_control_next_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="next" aria-label="next">'.$rctrl.'</a>';
+		}	
+
+
 		echo '</div></div>';
 
 		return ob_get_clean();
@@ -242,38 +257,18 @@ class TwitterCarousel{
 		if( !self::ContentKeyMatch($type) ){
 			return $default_content;
 		}
-
-		list($carousel_item_class,$carousel_control_prev_class,$carousel_control_next_class,$lctrl,$rctrl) = self::InintBSSettigs();
-
 		$section = array();
-
-		ob_start();
-		$id = 'carousel_'.time();
-
-		echo '<div id="'.$id.'" class="gp_twitter_carousel carousel slide">';
-		echo '<div style="padding-bottom:30%">';
-		echo '<ol class="carousel-indicators">';
-		echo '<li class="active gp_to_remove"></li>';
-		echo '</ol>';
-
-		//<!-- Carousel items -->
-		echo '<div class="carousel-inner">';
-		echo '<div class="'.$carousel_item_class.' active gp_to_remove"><img/></div>';
-		echo '</div>';
-
-		//<!-- Carousel nav -->
-		echo '<a class="'.$carousel_control_prev_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="prev" aria-label="prev">'.$lctrl.'</a>';
-		echo '<a class="'.$carousel_control_next_class.'" data-target="#'.$id.'" href="#'.$id.'" role="button" data-slide="next" aria-label="next">'.$rctrl.'</a>';
-
-		echo '</div></div>';
-
 		$section['gp_label'] = 'Bootstrap Carousel Gallery';
 		$section['gp_color'] = '#8d3ee8';
-		$section['content'] = ob_get_clean();
+		$section['images'] = array(0 => '/include/imgs/default_image.jpg');
 		$section['height'] = '30%';
-		$section['auto_start'] = false;
-		$section['alt_style'] = false;
 		$section['interval_speed'] = 5000;
+		$section['auto_start'] = false;
+		$section['show_vertical'] = false;
+		$section['show_controls'] = true;
+		$section['show_indicators'] = true;
+		$section['content'] = self::GenerateContent($section);
+		self::AddComponents();
 		return $section;
 	}
 
@@ -284,21 +279,28 @@ class TwitterCarousel{
 		}
 		global $page;
 
-		$_POST += array('auto_start'=>'','images'=>array());
+		$_POST += array(
+			'auto_start'=>'',
+			'show_vertical'=>'',
+			'show_controls'=>'',
+			'show_indicators'=>'',
+			'images'=>array()
+			);
 
-		$page->file_sections[$section]['auto_start']		= ($_POST['auto_start'] == 'true');
-		$page->file_sections[$section]['alt_style']			= ($_POST['alt_style'] == 'true');
 		$page->file_sections[$section]['images']			= $_POST['images'];
 		$page->file_sections[$section]['captions']			= $_POST['captions'];
 		$page->file_sections[$section]['height']			= $_POST['height'];
+		$page->file_sections[$section]['auto_start']		= ($_POST['auto_start'] == 'true');
+		$page->file_sections[$section]['show_vertical']		= ($_POST['show_vertical'] == 'true');
+		$page->file_sections[$section]['show_controls']		= ($_POST['show_controls'] == 'true');
+		$page->file_sections[$section]['show_indicators']	= ($_POST['show_indicators'] == 'true');
 		$page->file_sections[$section]['content_version']	= 2;
-
 		if( isset($_POST['interval_speed']) && is_numeric($_POST['interval_speed']) ){
 			$page->file_sections[$section]['interval_speed'] = $_POST['interval_speed'];
 		}
 
 		$page->file_sections[$section]['content'] = self::GenerateContent($page->file_sections[$section]);
-
+		
 		return true;
 	}
 
@@ -324,6 +326,7 @@ class TwitterCarousel{
 		} elseif ( !$BSVer || ($BSVer == 3) ) {
 			common::LoadComponents( 'bootstrap3-carousel' );
 			$page->css_user[] = $addonRelativeCode . '/carousel-def.css';
+			$page->css_user[] = $addonRelativeCode . '/carousel.css';
 		} else {
 			common::LoadComponents( 'bootstrap4-carousel' );
 			if (self::style == 'def') {
@@ -332,6 +335,7 @@ class TwitterCarousel{
 				$page->css_user[] = $addonRelativeCode . '/carousel-bs4.css';
 			}
 		}
+		$page->css_user[] = $addonRelativeCode . '/carousel-vert.css';
 		
 		$done = true;
 	}

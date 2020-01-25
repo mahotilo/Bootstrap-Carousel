@@ -8,6 +8,34 @@ $.extend(gp_editor,{
 	make_sortable:		false,
 	auto_start:			true,
 
+
+	/**
+	 * Add control elements to CKE
+	 *
+	 */
+	editorLoaded : function(section_object){
+		$('<div class="half_width">Vertical: <input class="ck_input" type="checkbox" name="show_vertical" value="true" /></div>')
+		  .appendTo('#gp_gallery_options')
+		  .find('input')
+		  .prop('checked',section_object.show_vertical);
+
+		$('<div class="half_width">Controls: <input class="ck_input" type="checkbox" name="show_controls" value="true" /></div>')
+		  .appendTo('#gp_gallery_options')
+		  .find('input')
+		  .prop('checked',section_object.show_controls);
+
+		$('<div class="half_width">Indicators: <input class="ck_input" type="checkbox" name="show_indicators" value="true" /></div>')
+		  .appendTo('#gp_gallery_options')
+		  .find('input')
+		  .prop('checked',section_object.show_indicators);
+		  
+		if ( !section_object.show_controls ){ 
+			edit_links_target = false;
+		}  
+	},
+
+
+
 	/**
 	 * Stop carousel cycling when editor is active
 	 *
@@ -133,60 +161,5 @@ $.extend(gp_editor,{
 
 	},
 
-
-	/**
-	 * Move Back/Forward
-	 * @todo Remove, not used since Typesetter 5.0-rc3
-	 *
-	 */
-	moveBack : function(){
-		var $curr = $('.gp_editing .carousel-inner .active');
-		var $prev = $curr.prev();
-		if( !$prev.length ) return;
-
-		// swap images
-		var prev_html = $prev.html();
-		var curr_html = $curr.html();
-		$prev.html(curr_html);
-		$curr.html(prev_html);
-
-		//swap icons
-		var $indicators = $('.gp_editing .carousel-indicators li');
-		$prev = $indicators.eq( $prev.index() );
-		$curr = $indicators.eq( $curr.index() );
-		prev_html = $prev.html();
-		curr_html = $curr.html();
-		$prev.html(curr_html);
-		$curr.html(prev_html);
-
-		//move to previous image
-		$('.gp_editing').carousel('prev');
-
-	},
-
-	moveForward : function(){
-
-		var $curr = $('.gp_editing .carousel-inner .active');
-		var $next = $curr.next();
-		if( !$next.length ) return;
-
-
-		// swap images
-		var next_html = $next.html();
-		var curr_html = $curr.html();
-		$next.html(curr_html);
-		$curr.html(next_html);
-
-		//swap icons
-		var $indicators = $('.gp_editing .carousel-indicators li');
-		$next = $indicators.eq( $next.index() );
-		$curr = $indicators.eq( $curr.index() );
-		next_html = $next.html();
-		curr_html = $curr.html();
-		$next.html(curr_html);
-		$curr.html(next_html);
-
-		$('.gp_editing').carousel('next');
-	}
 
 });

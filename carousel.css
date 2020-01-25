@@ -1,0 +1,4 @@
+/* Fixes for TS CKE stylings*/
+#ckeditor_area .ck_input, #gp_current_image .ck_input{
+	border: none !important;
+}

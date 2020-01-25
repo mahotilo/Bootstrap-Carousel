@@ -68,20 +68,17 @@
 	top: 40%;
 	left: 15px;
 	width: 40px;
-	font-size: 60px;
+	font-size: 100px;
 	font-weight: 100;
-	line-height: 30px;
+	line-height: 40px;
+	height: 60px;
 	text-align: center;
-
 	background: transparent !important;
-	background: rgba(0,0,0,0) !important;
 	border: 0 none;
 	color: #666;
-	font-size: 100px;
-	height: 80px;
 	margin-top: 0;
 	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
-	z-index: 10;
+	z-index: 10;	
 }
 
 .gp_twitter_carousel .carousel-control.right,
@@ -165,7 +162,7 @@
  *
  */
 .gp_twitter_carousel{
-	font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-family: Helvetica,Arial,sans-serif;
 	position:relative;
 	height: auto; /* for ie */
 }
