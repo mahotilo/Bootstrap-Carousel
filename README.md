@@ -24,4 +24,4 @@ const style = 'bs4';
 * remove jquery.mobile.custom.js and use swipe detection in carousel.js 
 * support for all versions of Bootstrap with autodetection of theme's BS version 
 * add Vertical style
-* add settings for showing of control and indicators
+* add settings to show/hide controls and indicators
