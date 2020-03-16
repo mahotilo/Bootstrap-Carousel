@@ -179,7 +179,7 @@ class TwitterCarousel{
 				$style = 'display: none;';
 			}
 			$indicators .= '<li data-target="#'.$id.'" data-slide-to="'.$j.'" class="'.$class.'" style="'.$style.'">';
-			$indicators .= '<a href="'.$img.'" aria-hidden="true"><img src="'.$thumb_path.'" alt="" class="d-none" aria-hidden="true"></a>';
+			$indicators .= '<a href="'.$img.'" aria-hidden="true"><img src="'.$thumb_path.'" alt="" aria-hidden="true" style="display: none"></a>';
 			$indicators .= '</li>';
 			$j++;
 		}
@@ -256,6 +256,7 @@ class TwitterCarousel{
 		$section['gp_label'] = 'Bootstrap Carousel Gallery';
 		$section['gp_color'] = '#8d3ee8';
 		$section['images'] = array(0 => '/include/imgs/default_image.jpg');
+		$section['captions'] = array(0 => 'Default Image');
 		$section['height'] = '30%';
 		$section['interval_speed'] = 5000;
 		$section['auto_start'] = false;
